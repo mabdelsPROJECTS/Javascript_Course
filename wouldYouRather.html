@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html> 
+<head>
+  <title> Would You Rather </title>
+  <img class = "wouldYouRatherImg" src = "clipart1181613.png">
+  <style> 
+  body{
+    background-color: gold;
+  }
+  .wouldYouRatherImg{
+    height: 100px;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .startGameButton{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    background-color: white;
+    color: black;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+  .rightSideButton{
+    margin-top: 30px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .leftSideButton{
+    margin-top: 30px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    
+  }
+  </style>
+</head>
+<body>
+ <button class="startGameButton" onclick="startTheGame()"> Start Game</button>
+  <button class="rightSideButton"> Right Side</button>
+  <button class="leftSideButton"> Left Side</button>
+   
+   <script>
+    const url = "https://would-you-rather.p.rapidapi.com/wyr/random";
+    const headers = {
+	"x-rapidapi-key": "ca3802b7d6msh6c7759ce753d4cap166fc1jsn84b65c5a98c4",
+	"x-rapidapi-host": "would-you-rather.p.rapidapi.com"
+      };
+      async function startTheGame(){
+        try {
+            // Make the API call with headers
+        const response = await fetch(url, {
+          method: 'GET', // or 'POST', 'PUT', 'DELETE', etc.
+          headers: headers
+                });
+                // Check if the response is OK
+        if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+        }
+                // Parse the JSON from the response
+        const data = await response.json();
+        const dataString = JSON.stringify(data);
+        const startWord = "rather";
+        const endWord = "?";
+        const startIndex = dataString.indexOf(startWord) + 6;
+        const endIndex = dataString.indexOf(endWord);
+        const result = dataString.substring(startIndex, endIndex);
+        console.log(result);
+        const regex = /\b or \b/;
+        const finalSplit = result.split(regex);
+        console.log(finalSplit);
+        document.querySelector('.rightSideButton').innerHTML = finalSplit[0];
+        document.querySelector('.leftSideButton').innerHTML = finalSplit[1];
+
+      }
+      
+      catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+            }
+    }
+   </script>
+</body>
+</html>
