@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html> 
+<head>
+  <title> Marvel </title>
+  <style>
+    body{
+      background-color: rgb(237, 29, 36);
+      font-family: monospace;
+      text-align: center;
+    }
+    .titleContainer{
+      /*display:block;*/
+      width: 360px;
+      height: 160px;
+     /* margin-right: auto;
+      margin-left: auto;*/
+    }
+    .searchText{
+      color: white;
+      display: block;
+      /*margin-right: auto;
+      margin-left: auto;*/
+    }
+    .searchBar{
+      margin-right: 20px;
+      padding: 10px;
+      width: 270px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+
+    }
+    .searchButton{
+    border: 1px solid black ;
+    background-color: white;
+    color: rgb(237, 29, 36);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    width: 100px;
+    height: 40px;
+      }
+      .nameElement{
+        color: white;
+      }
+      .descriptionElement{
+        color: white;
+        font-size: 20px;
+        
+      }
+    
+    
+  </style>
+</head>
+<body>
+  <img class = "titleContainer" src = "marvel.png">
+  <h1 class = "searchText"> Search A Superhero </h1>
+  <input class = "searchBar" onkeydown="enterOrNot(event)">
+  <button class = "searchButton" onclick = " startSearch()" > Search </button>
+  <div class = "allImages"> </div>
+  <script>
+    const comicVineKey = "640b7d60e591f6cd5c13e0f3a93a8ac8f389a5e4";
+    const comicVineUrl = "https://comicvine.gamespot.com/api/search/?api_key=${comicVineKey}&format=json&resources=character&query=";
+    async function startSearch(){
+      const divImage = document.querySelector('.allImages');
+      divImage.innerHTML = ' ';
+      const text = document.querySelector('.searchBar').value;
+      const url = "https://gateway.marvel.com/v1/public/characters?ts=1&apikey=f32005f45c06c74edff20e34c89840ca&hash=4b6eecfc5fd20eee12ed57a1c87e41b8";
+      const nameStartWith = "&nameStartsWith=";
+      const finalUrl = url + nameStartWith + text;
+      const finalComicVineUrl = comicVineUrl + text;
+      const response = await fetch(finalUrl);
+      const data = await response.json();
+      console.log(data.data.results);
+      const jsonObject = data.data.results;
+      if(jsonObject.length === 0){
+        divImage.innerHTML = '<h1>No Results Found</h1>';
+      }
+      else{
+      jsonObject.forEach(character => {
+        
+        divImage.innerHTML += `
+          
+            <h2 class = "nameElement">${character.name}</h2>
+            <img src="${character.thumbnail.path}.${character.thumbnail.extension}" width = "720" height = "480">
+            <p class ="descriptionElement">${character.description}</p>
+          
+        `;
+      });
+    }
+  }
+
+      function enterOrNot(event){
+        if(event.key === 'Enter'){
+          startSearch();
+         }
+        }
+  </script>
+</body>
+</html>
